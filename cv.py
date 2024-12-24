@@ -70,7 +70,7 @@ class SkinConditionNNClassifier:
         model.compile(optimizer="adam", loss="categorical_crossentropy", metrics=["accuracy"])
         self.model = model
 
-    def train_and_evaluate(self, epochs=5, batch_size=32):
+    def train_and_evaluate(self, epochs=20, batch_size=32):
         # استخدام ImageDataGenerator لتوسيع البيانات
         datagen = ImageDataGenerator(
             rotation_range=20,
@@ -114,7 +114,6 @@ class SkinConditionNNClassifier:
         img = cv2.resize(img, (128, 128))  # تغيير الحجم إلى 128x128
         img = img / 255.0  # Normalization
         img = img.reshape(1, 128, 128, 3)  # إعادة تشكيل الصورة لتطابق المدخل المطلوب للنموذج
-
         # توقع الفئة
         probabilities = self.model.predict(img)
         predicted_class = np.argmax(probabilities)
@@ -128,11 +127,12 @@ image_folder = "images"  # المسار إلى مجلد الصور
 classifier = SkinConditionNNClassifier(csv_path, image_folder)
 classifier.build_model()
 classifier.train_and_evaluate(epochs=20, batch_size=32)
+classifier.train_and_evaluate(epochs=5, batch_size=32)
 
 # إدخال صورة جديدة
 # image_path = "ISIC_0031783.jpg"  # هنا تقوم بإدخال مسار الصورة الجديدة
 # predicted_condition = classifier.predict(image_path)
-image_path = "ISIC_0028980.jpg"  # ضع مسار الصورة هنا
+image_path = "AKIEC.jpg"  # ضع مسار الصورة هنا
 predicted_condition = classifier.predict(image_path)
 print(f"The predicted skin condition is: {predicted_condition}")
 print(f"all time =  {(time.time()-x)/60}")
